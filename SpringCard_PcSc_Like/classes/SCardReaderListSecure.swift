@@ -8,7 +8,7 @@ import CoreBluetooth
 import os.log
 import CryptoSwift
 
-internal class SCardReaderListSecure : SClass {
+public class SCardReaderListSecure : SClass {
    
     internal var secureConnectionParameters: SecureConnectionParameters!
     internal var isSecureCommunication = false

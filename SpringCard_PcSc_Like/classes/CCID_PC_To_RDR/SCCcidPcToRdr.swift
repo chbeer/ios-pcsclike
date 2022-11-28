@@ -9,7 +9,7 @@ import os.log
 
 // Represent a request (used to send/write data to the host)
 /// nodoc:
-internal class SCCcidPcToRdr: SClass {
+public class SCCcidPcToRdr: SClass {
     internal var header: SCCcidPcToRdrHeader!
     internal var payload: ScCcidPcToRdrPayload?
     
@@ -19,7 +19,7 @@ internal class SCCcidPcToRdr: SClass {
     internal let commandParameters: [Byte] = [0x00, 0x00, 0x00]
     private var readerListSecure: SCardReaderListSecure?	// Security class
     
-    init(command: SCard_CCID_PC_To_RDR, slotNumber: Int, sequenceNumber: Int, payload: [Byte]?, readerListSecure: SCardReaderListSecure?) {
+    public init(command: SCard_CCID_PC_To_RDR, slotNumber: Int, sequenceNumber: Int, payload: [Byte]?, readerListSecure: SCardReaderListSecure?) {
         self.readerListSecure = readerListSecure
         super.init()
         
@@ -54,7 +54,7 @@ internal class SCCcidPcToRdr: SClass {
         }
     }
     
-    internal func getCommand() -> [Byte]? {
+    public func getCommand() -> [Byte]? {
         var command: [Byte] = header.getHeader()
         if self.payload != nil {
             command += self.payload!.getPayload()!

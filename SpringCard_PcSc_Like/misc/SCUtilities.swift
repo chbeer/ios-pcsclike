@@ -6,7 +6,7 @@
 import Foundation
 import CoreBluetooth
 import os.log
-typealias Byte = UInt8
+public typealias Byte = UInt8
 
 /// :nodoc:
 extension Collection where Element == Byte {

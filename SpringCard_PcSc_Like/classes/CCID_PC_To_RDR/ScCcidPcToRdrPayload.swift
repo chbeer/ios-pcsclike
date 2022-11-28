@@ -8,7 +8,7 @@ import CoreBluetooth
 import os.log
 
 /// nodoc:
-internal class ScCcidPcToRdrPayload: SClass {
+public class ScCcidPcToRdrPayload: SClass {
 
 	private var rawContent: [Byte]?
     private var readerListSecure: SCardReaderListSecure?

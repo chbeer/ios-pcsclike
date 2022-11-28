@@ -6,7 +6,7 @@
 import Foundation
 
 /// :nodoc:
-internal enum SCard_CCID_PC_To_RDR: UInt8 {
+public enum SCard_CCID_PC_To_RDR: UInt8 {
 	case PC_To_RDR_IccPowerOn = 0x62,
 	PC_To_RDR_IccPowerOff = 0x63,
 	PC_To_RDR_GetSlotStatus = 0x65,

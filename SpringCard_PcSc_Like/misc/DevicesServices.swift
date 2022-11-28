@@ -45,7 +45,7 @@ internal class DevicesServices {
 					isAdvertisingService: true,
 					serviceCharacteristics: [
 						"CCID_PC_To_RDR": "91ACE9FD-EDD6-40B1-BA77-050A78CF9BC0",
-						"CCID_RDR_To_PC": "94EDE62E-0808-46F8-91EC-AC0272D67796",
+						"CCID_RDR_To_PC": "B4CA2D75-B855-4C1A-BF40-4A72AE46BD5A",
 						"CCID_Status": "7C334BC2-1812-4C7E-A81D-591F92933C37"
 					])]
 	}

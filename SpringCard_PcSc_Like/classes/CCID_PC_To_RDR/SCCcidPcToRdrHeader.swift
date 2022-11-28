@@ -8,7 +8,7 @@ import CoreBluetooth
 import os.log
 
 /// nodoc:
-internal class SCCcidPcToRdrHeader: SClass {
+public class SCCcidPcToRdrHeader: SClass {
 	
 	private var rawContent: [Byte] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	

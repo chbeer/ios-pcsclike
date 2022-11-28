@@ -6,7 +6,7 @@
 import Foundation
 import os.log
 
-class SClass {
+public class SClass {
     
     internal var errorCode: SCardErrorCode = .noError
     internal var errorMessage = ""

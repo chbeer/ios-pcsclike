@@ -69,7 +69,7 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
     public static let libraryName = "PC/SC-Like BLE Library"
     public static let LibrarySpecial = ""
     public static let libraryDebug = true
-    public static let libraryVersion = (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String) ?? ""
+    public static let libraryVersion = "1.0.0" // (Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String) ?? ""
     public static let libraryVersionMajor = libraryVersion.components(separatedBy: ".")[0]
     public static let libraryVersionMinor = libraryVersion.components(separatedBy: ".")[1]
     public static let LibraryVersionBuild = libraryVersion.components(separatedBy: ".")[2]
@@ -427,7 +427,11 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         #endif
         self.slotCount = 0
         
-        let temporaryCcidStatus = SCCcidStatus(characteristic: characteristic)
+        let temporaryCcidStatus = SCCcidStatus() // SCCcidStatus(characteristic: characteristic)
+        temporaryCcidStatus.numberOfSlots = 1
+        temporaryCcidStatus.slots = [
+            .init(slotNumber: 0, bits: 0)
+        ]
         if !temporaryCcidStatus.isValid {
             self.generateError(code: temporaryCcidStatus.errorCode, message: temporaryCcidStatus.errorMessage, trigger: true)
             return
@@ -445,6 +449,8 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         createReaders(temporaryCcidStatus)
         refreshSlotsFromCcidStatus(characteristic: characteristic)
         machineState = .isReadingSlotsName
+        
+        self.slotNameCounter = 1
         getSlotsName()
     }
     
@@ -1323,15 +1329,15 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         let payloadLengthBytes: [Byte] = [bytes[1], bytes[2], bytes[3], bytes[4]]
         let payloadLength = SCUtilities.fromByteArray(byteArray: payloadLengthBytes, secureCommunication: self.isSecureCommunication)
         
-        os_log("%s", log: OSLog.libLog, type: .debug, "--------------------------")
-        os_log("%s", log: OSLog.libLog, type: .debug, "Command        : 0x" + String(format: "%02X", bytes[0]))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Length         : " + String(payloadLength))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Slot number    : " + String(bytes[5]))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Sequence number: " + String(bytes[6]))
+        os_log("--------------------------", log: OSLog.libLog, type: .debug)
+        os_log("Command        : 0x%02X (%@)", log: OSLog.libLog, type: .debug, bytes[0], SCard_CCID_PC_To_RDR(rawValue: bytes[0]).debugDescription)
+        os_log("Length         : %d", log: OSLog.libLog, type: .debug, payloadLength)
+        os_log("Slot number    : %d", log: OSLog.libLog, type: .debug, bytes[5])
+        os_log("Sequence number: %d", log: OSLog.libLog, type: .debug, bytes[6])
         if bytes.count > 10 {
             os_log("%s", log: OSLog.libLog, type: .debug, "Payload        : " + Array(bytes[10...]).hexa)
         }
-        os_log("%s", log: OSLog.libLog, type: .debug, "--------------------------")
+        os_log("--------------------------", log: OSLog.libLog, type: .debug)
         #endif
     }
     
@@ -1356,11 +1362,11 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         }
         let payloadLengthBytes: [Byte] = [bytes[1], bytes[2], bytes[3], bytes[4]]
         let payloadLength = SCUtilities.fromByteArray(byteArray: payloadLengthBytes, secureCommunication: self.isSecureCommunication)
-        os_log("%s", log: OSLog.libLog, type: .debug, "--------------------------")
-        os_log("%s", log: OSLog.libLog, type: .debug, "Response code  : 0x" + String(format: "%02X", bytes[0]))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Length         : " + String(payloadLength))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Slot number    : " + String(bytes[5]))
-        os_log("%s", log: OSLog.libLog, type: .debug, "Sequence number: " + String(bytes[6]))
+        os_log("--------------------------", log: OSLog.libLog, type: .debug)
+        os_log("Response code  : 0x%02X (%@)", log: OSLog.libLog, type: .debug, bytes[0], CCID_RDR_To_PC_Answer_Codes(rawValue: bytes[0]).debugDescription)
+        os_log("Length         : %d", log: OSLog.libLog, type: .debug, payloadLength)
+        os_log("Slot number    : %d", log: OSLog.libLog, type: .debug, bytes[5])
+        os_log("Sequence number: %d", log: OSLog.libLog, type: .debug, bytes[6])
         if bytes[7] != 0x00 {
             self._slotStatus = bytes[7]
             os_log("%s", log: OSLog.libLog, type: .debug, "Slot status    : " + String(format: "%02X", bytes[7]))
@@ -1372,7 +1378,7 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         if bytes.count > 10 {
             os_log("%s", log: OSLog.libLog, type: .debug, "Payload        : " + Array(bytes[10...]).hexa)
         }
-        os_log("%s", log: OSLog.libLog, type: .debug, "--------------------------")
+        os_log("--------------------------", log: OSLog.libLog, type: .debug)
         #endif
     }
     
@@ -2151,5 +2157,26 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         self.isWaitingAnswer = true
         self.commonCharacteristicIndex = 0
         getBatteryLevelCharacteristicValue()
+    }
+}
+
+extension SCard_CCID_PC_To_RDR {
+    var debugDescription: String {
+        switch self {
+        case .PC_To_RDR_IccPowerOn: return "PC_To_RDR_IccPowerOn"
+        case .PC_To_RDR_IccPowerOff: return "PC_To_RDR_IccPowerOff"
+        case .PC_To_RDR_GetSlotStatus: return "PC_To_RDR_GetSlotStatus"
+        case .PC_To_RDR_Escape: return "PC_To_RDR_Escape"
+        case .PC_To_RDR_XfrBlock: return "PC_To_RDR_XfrBlock"
+        }
+    }
+}
+extension CCID_RDR_To_PC_Answer_Codes {
+    var debugDescription: String {
+        switch self {
+        case .RDR_To_PC_DataBlock: return "RDR_To_PC_DataBlock"
+        case .RDR_To_PC_SlotStatus: return "RDR_To_PC_SlotStatus"
+        case .RDR_To_PC_Escape: return "RDR_To_PC_Escape"
+        }
     }
 }
