@@ -8,9 +8,9 @@ import CoreBluetooth
 import os.log
 
 // Represents a response (answer)
-internal class SCCcidRdrToPc: SClass {
-	internal var header: SCCcidRdRToPcHeader
-	internal var payload: ScCcidRdrToPcPayload?
+public class SCCcidRdrToPc: SClass {
+    public var header: SCCcidRdRToPcHeader
+    public var payload: ScCcidRdrToPcPayload?
 
 	private var _isValid = false
 	internal var _isLongAnswer = false
@@ -20,7 +20,7 @@ internal class SCCcidRdrToPc: SClass {
     private var readerListSecure: SCardReaderListSecure?
     internal var isSecureCommunication = false
     
-    init(characteristic: CBCharacteristic, readerListSecure: SCardReaderListSecure?, isLongAnswer: Bool = false) {
+    public init(characteristic: CBCharacteristic, readerListSecure: SCardReaderListSecure?, isLongAnswer: Bool = false) {
         self.header = SCCcidRdRToPcHeader(characteristic: characteristic, readerListSecure: readerListSecure, isLongAnswer: isLongAnswer)
         self.readerListSecure = readerListSecure
         self.isLongAnswerFromCaller = isLongAnswer

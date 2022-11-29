@@ -20,7 +20,7 @@ internal struct CcidResponsePositions {
 
 /// :nodoc:
 // Represents a response header
-internal class SCCcidRdRToPcHeader: SClass {
+public class SCCcidRdRToPcHeader: SClass {
 	private var rawContent: [UInt8] = []
 	internal let headerLength = 10
     private var readerListSecure: SCardReaderListSecure?

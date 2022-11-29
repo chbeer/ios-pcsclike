@@ -8,13 +8,13 @@ import CoreBluetooth
 import os.log
 
 // Represents a response payload
-internal class ScCcidRdrToPcPayload: SClass {
-	private var isUsingSecureCommunication = false
-	private var payload: [UInt8] = []
-	internal var payloadLength: UInt32 = 0
+public class ScCcidRdrToPcPayload: SClass {
+    public private(set) var isUsingSecureCommunication = false
+	public private(set) var payload: [UInt8] = []
+    public internal(set) var payloadLength: UInt32 = 0
 	
-	internal var isValid = false
-	internal var islongAnswer = false
+    public internal(set) var isValid = false
+    public internal(set) var islongAnswer = false
     private var readerListSecure: SCardReaderListSecure?
 
 	init(characteristic: CBCharacteristic, startingIndex: Int, payloadLength: UInt32, readerListSecure: SCardReaderListSecure?) {
