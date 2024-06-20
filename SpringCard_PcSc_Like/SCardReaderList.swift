@@ -307,6 +307,12 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
             #endif
             self.deviceSpecificServices = DevicesServices.getServices(deviceType: .D600)
             deviceType = .D600
+        } else if searchInKnownServicesList(DevicesServices.getServices(deviceType: .ComboProduct)) {
+            #if DEBUG
+            os_log("Device is detected as a ComboProduct like S370", log: OSLog.libLog, type: .debug)
+            #endif
+            self.deviceSpecificServices = DevicesServices.getServices(deviceType: .ComboProduct)
+            deviceType = .ComboProduct
         }
         if deviceType == .Unknown {
             self.generateError(code: SCardErrorCode.missingService, message: "It was not possible to detect the device type", trigger: true)
@@ -1841,6 +1847,7 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
         #endif
         var advertisingServices: [CBUUID] = []
         SCardReaderList.getAdvertisingServicesFromList(deviceServices: DevicesServices.getD600Services(), advertisingServices: &advertisingServices)
+        SCardReaderList.getAdvertisingServicesFromList(deviceServices: DevicesServices.getComboProductServices(), advertisingServices: &advertisingServices)
         SCardReaderList.getAdvertisingServicesFromList(deviceServices: DevicesServices.getPuckUnbondedServices(), advertisingServices: &advertisingServices)
         SCardReaderList.getAdvertisingServicesFromList(deviceServices: DevicesServices.getPuckBondedServices(), advertisingServices: &advertisingServices)
         return advertisingServices;
