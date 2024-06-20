@@ -6,15 +6,15 @@ let package = Package(
     name: "ios-pcsclike",
     products: [
         .library(
-            name: "ios-pcsclike",
-            targets: ["ios-pcsclike"]),
+            name: "SpringCard_PcSc_Like",
+            targets: ["SpringCard_PcSc_Like"]),
     ],
     dependencies: [
         .package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.6.0"))
     ],
     targets: [
         .target(
-            name: "ios-pcsclike",
+            name: "SpringCard_PcSc_Like",
             dependencies: [
                 "CryptoSwift"
             ],
@@ -22,6 +22,6 @@ let package = Package(
         ),
         .testTarget(
             name: "ios-pcsclikeTests",
-            dependencies: ["ios-pcsclike"]),
+            dependencies: ["SpringCard_PcSc_Like"]),
     ]
 )
