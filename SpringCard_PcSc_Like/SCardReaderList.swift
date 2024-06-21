@@ -118,9 +118,9 @@ public class SCardReaderList: NSObject, CBCentralManagerDelegate, CBPeripheralDe
     private var servicesCount = 0
     private var currentServiceIndex = 0
     private var deviceServices: [CBService] = []
-    private var commoncharacteristicsList: [CBCharacteristic] = []
-    private var batteryLevelCharacteristics: [CBCharacteristic] = []
-    private var characteristicsSpecificsToDevice: [CBCharacteristic] = []
+    public private(set) var commoncharacteristicsList: [CBCharacteristic] = []
+    public private(set) var batteryLevelCharacteristics: [CBCharacteristic] = []
+    public private(set) var characteristicsSpecificsToDevice: [CBCharacteristic] = []
     
     private var CCID_Status_Characteristic: CBCharacteristic?
     private var CCID_PC_To_RDR_Characteristic: CBCharacteristic?
